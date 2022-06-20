@@ -9,6 +9,7 @@ import SlidingToken
 
 #Input: Graph edges G, start vertex, end vertex
 #Output: shortes path in graph between the vertices
+#this code bit has been taken from https://onestepcode.com/graph-shortest-path-python/?utm_source=rss&utm_medium=rss&utm_campaign=graph-shortest-path-python
 def Breadth_First_Search(Edges, StartVertex, EndVertex):
     if StartVertex == EndVertex:
         return [StartVertex]
@@ -55,7 +56,9 @@ def reconfiguration_Search(Edges, I, J, RigidTokens, CC):
         for route in routes:
             start = route[0]
             route.remove(start)
-            if not any(item in route for item in [item for item in routes]):
+            #if the current paths tokens does not have any neighbours that are neighbours for any other paths tokens, we can simply move our tokens directly. 
+            #Else we must take precautions as to not create a step that is not an independent set.
+            if not any(item in SlidingToken.Vertex_Neighbours(Edges, [item for item in route]) for item in [item for item in SlidingToken.Vertex_Neighbours(Edges,[item for item in routes])]):
                 newStep = reconfigurationSequence[routeCounter].copy()
                 newStep.remove(start)
                 for token in route:
@@ -70,7 +73,22 @@ def reconfiguration_Search(Edges, I, J, RigidTokens, CC):
                         newStep.remove(token)     
                 routeCounter += 1
             else:
-                #if all items in the routes are not different, then we must ensure that the steps between each reconfiguration is still an independent set
-                print("haha")
+                newStep = reconfigurationSequence[routeCounter].copy()
+                newStep.remove(start)
+                for token in route:
+                    #if any neighbours for this specific token are neighbours with tokens from other paths, we put this path on hold.
+                    if any(item in SlidingToken.Vertex_Neighbours(Edges, token) for item in [item for item in SlidingToken.Vertex_Neighbours(Edges,[item for item in routes])]):
+                        break
+                    else:
+                        newStep.append(token)
+                        newStep = [int(i) for i in newStep]
+                        newStep.sort()
+                        addedStep = newStep.copy()
+                        addedStep = [str(i) for i in addedStep]
+                        reconfigurationSequence.append(addedStep)
+                        newStep = [str(i) for i in newStep]
+                        if not token == route[-1]:
+                            newStep.remove(token)     
+                    routeCounter += 1
                     
     return reconfigurationSequence

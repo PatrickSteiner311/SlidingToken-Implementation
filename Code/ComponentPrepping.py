@@ -41,6 +41,7 @@ def Find_IJC(I, Vertices):
 
 #input: temporary list, vertice vi, visited truth list, edges E
 #output: recursively, connected components.
+#this code bit has been taken from https://www.geeksforgeeks.org/connected-components-in-an-undirected-graph/ after disussing it and approval received from supervisor
 def Depth_First_Search(temp, vertex, visited, E):
     visited[int(vertex)] = True
     v = str(vertex)
