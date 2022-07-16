@@ -96,7 +96,7 @@ def Check_Shared_Rigid(RigidTokensI, RigidTokensJ):
 #Output: I^{LI,UI}
 def Apply_Limitations(Input, LowerLimit, UpperLimit):
     I = Input.copy()
-    for token in I:
+    for token in Input:
         if int(token) < LowerLimit:
             I.remove(token)
         elif int(token) > int(UpperLimit):

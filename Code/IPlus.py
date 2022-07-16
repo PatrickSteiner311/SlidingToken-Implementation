@@ -126,9 +126,8 @@ def Eval_W(MinN, n, T, W, Edges, k):
         for j in range(int(list(T)[k-1])+1):
             #somewhere here was a mix up considering i and j counters
             # it works when they switch places.
-            if 0 <= i and i < j:
+            if 0 <= j and j < i:
                 if SlidingToken.Check_IS(Edges, W[i][j]) and not W[i][j] == ["invalid"]:
-                    #print("IJ",i,j)
                     AppW = SlidingToken.Apply_Limitations(W[i][j], 0, i)
                     WIBuffer.append(AppW)
         if not len(WIBuffer) == 0:
@@ -147,11 +146,11 @@ def Find_IJPlus(I, Vertices, Edges):
     W = Build_W(Vertices, Edges, T, MinN, n, k)
     #Code to print out dynamic programming table W linewise if desired.
     #for i in range(k):
-    #    print("W:", W[int(i)])
+        #print("W:", W[int(i)])
     
     W2 = Eval_W(MinN, n, T, W, Edges, k)
     # instantiate final list with T[0]
-
+    #print("w2:", W2)
     IJPlus = []
     for i in W2.keys():
         if int(i) > 0:
@@ -163,4 +162,11 @@ def Find_IJPlus(I, Vertices, Edges):
                 IJPlus = [Ti]
             elif len(Ti) == len(IJPlus[0]):
                 IJPlus.append(Ti)
-    return IJPlus
+    finalList = [int(i) for i in IJPlus[0]]
+    while not len(finalList) == len(I):
+        if len(finalList) > 1:
+            finalList.remove(max(finalList))
+        else:
+            return [str(i) for i in finalList]     
+    finalList = [str(i) for i in finalList]        
+    return finalList
